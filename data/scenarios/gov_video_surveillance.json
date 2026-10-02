@@ -1,0 +1,36 @@
+{
+  "scenario_id": "gov_video_surveillance",
+  "name": "区级政务视联网 + 视频结构化",
+  "industry": "政务",
+  "description": "一个区级政务云上的视频接入与结构化分析场景：前端摄像机接入流媒体平台，AI 对实时画面做结构化解析，解析结果与原始视频分冷热存储。",
+  "workload": {
+    "camera_count": 2000,
+    "fps_per_camera": 25,
+    "stream_bitrate_mbps": 4.0,
+    "retention_days_hot": 15,
+    "retention_days_cold": 90,
+    "ai_inference_fps": 60,
+    "ai_inference_gpu_type": "GNV4.11CU.1GPU",
+    "ai_inference_gpu_per_node": 1,
+    "concurrent_users": 300,
+    "avg_bandwidth_mbps_per_user": 8.0,
+    "api_qps": 1200,
+    "api_p95_latency_ms": 200
+  },
+  "service_level": {
+    "availability_target": 0.999,
+    "rto_minutes": 30,
+    "rpo_minutes": 5
+  },
+  "growth": {
+    "camera_growth_annual": 0.25,
+    "user_growth_annual": 0.20,
+    "forecast_years": 3
+  },
+  "constraints": {
+    "must_use_local_deployment": true,
+    "data_residency": "境内",
+    "max_gpu_nodes": 40
+  },
+  "assumption_refs": ["A-01", "A-02", "A-05", "A-07"]
+}

@@ -1,0 +1,12 @@
+﻿item,unit,monthly_cny,source_url,fetched_at,note
+public_bandwidth_le_2mbps,元/Mbps/月,20,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,广州 常规BGP IP 包月带宽 ≤2Mbps 部分
+public_bandwidth_2_5mbps,元/Mbps/月,25,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,广州 常规BGP IP 包月带宽 2Mbps<带宽≤5Mbps 部分
+public_bandwidth_gt_5mbps,元/Mbps/月,90,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,广州 常规BGP IP 包月带宽 >5Mbps 部分
+public_bandwidth_hourly_le_5mbps,元/Mbps/小时,0.063,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,按小时带宽 中国大陆 ≤5Mbps 部分
+public_bandwidth_hourly_gt_5mbps,元/Mbps/小时,0.25,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,按小时带宽 中国大陆 >5Mbps 部分
+public_traffic,元/GB,0.80,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,广州 按流量计费 中国大陆地区
+shared_bandwidth_package,元/Mbps/月,108,https://buy.cloud.tencent.com/price/bandwidth,2026-10-02,共享带宽包 全部地域
+cbs_extra_perf_1_650,元/MB/s/月,3,https://cloud.tencent.com/document/product/362/2413,2026-10-02,云硬盘额外性能 1MB/s-650MB/s 广州
+cbs_extra_perf_651_3650,元/MB/s/月,5,https://cloud.tencent.com/document/product/362/2413,2026-10-02,云硬盘额外性能 651MB/s-3650MB/s 广州
+lb_public_bandwidth_le_5mbps,元/月,125,https://cloud.tencent.com/document/product/215/42935,2026-10-02,负载均衡固定带宽 1-5Mbps 广州
+lb_public_bandwidth_gt_5mbps,元/月,80,https://cloud.tencent.com/document/product/215/42935,2026-10-02,负载均衡固定带宽 6Mbps及以上 每增加1Mbps 加收 元/月 广州

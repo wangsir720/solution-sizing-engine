@@ -1,0 +1,8 @@
+﻿科目,项,数量,单位,单价(元),单价来源,推导链,月费(元),三年合计(元)
+计算,GPU 云服务器（GNV4.11CU.1GPU）,1,节点·月,5507.0,GNV4.11CU.1GPU（NVIDIA A10，12 vCPU / 48 GB，1 卡）月价 5507.0 元 —— https://cloud.tencent.com/document/product/236/50371,需求 1 卡 / 每节点 1 卡 -> 1 节点；叠加 无额外冗余 后按 1 节点计价,5507.0,198252.0
+存储,热存储（高性能云硬盘）,1235961.91,GiB·月,0.35,高性能云硬盘 = 0.35 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）,热容量 1235961.91 GiB（日增量 = camera_count(2000) × stream_bitrate_mbps(4.0) = 82397.46 GiB/天；热存储 = 日增量 × 15 天 = 1235961.91 GiB；冷存储 = 日增量 × 90 天 = 7415771.48 GiB）,432586.67,15573120.07
+存储,冷存储（按 高性能云硬盘 计，见局限）,7415771.48,GiB·月,0.35,高性能云硬盘 = 0.35 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）,冷容量 7415771.48 GiB；公开价目表无冷/归档档位，暂按高性能云硬盘单价计，实际冷存储应走归档类存储，金额会偏高,2595520.02,93438720.65
+存储,快照容量（快照容量）,865173.34,GiB·月,0.13,快照容量 = 0.13 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）,存储总量 8651733.39 GiB × 快照比例 10%（假设 A-10）= 865173.34 GiB,112472.53,4049011.23
+网络,公网出向带宽（包月阶梯）,2400.0,Mbps,89.8604,public_bandwidth_le_2mbps = 20.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth） + public_bandwidth_2_5mbps = 25.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth） + public_bandwidth_gt_5mbps = 90.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth）,阶梯累加：0-2 Mbps × 20.0 = 40.00 元/月 + 2-5 Mbps × 25.0 = 75.00 元/月 + 5-2400 Mbps × 90.0 = 215550.00 元/月 -> 215665.00 元/月,215665.0,7763940.0
+
+月费合计,,,,,,,3361751.22,121023043.92

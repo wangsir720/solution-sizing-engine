@@ -1,0 +1,40 @@
+{
+  "scenario_id": "edu_hybrid_meeting",
+  "name": "高校混合教学与录制直播",
+  "industry": "教育",
+  "description": "校区级混合教学：多间教室并发授课录播，课后转码与点播，直播互动。算力压力在转码而非推理，因此 GPU 规格取向与前两个场景不同（编解码 vs 浮点算力）。",
+  "workload": {
+    "camera_count": 0,
+    "fps_per_camera": 0,
+    "stream_bitrate_mbps": 0.0,
+    "recorded_classrooms": 120,
+    "concurrent_live_streams": 20,
+    "live_stream_bitrate_mbps": 6.0,
+    "transcode_streams_concurrent": 20,
+    "retention_days_hot": 60,
+    "retention_days_cold": 1095,
+    "ai_inference_fps": 0,
+    "ai_inference_gpu_type": "GN7.8CU.1GPU",
+    "ai_inference_gpu_per_node": 1,
+    "concurrent_users": 8000,
+    "avg_bandwidth_mbps_per_user": 3.0,
+    "api_qps": 800,
+    "api_p95_latency_ms": 400
+  },
+  "service_level": {
+    "availability_target": 0.999,
+    "rto_minutes": 60,
+    "rpo_minutes": 15
+  },
+  "growth": {
+    "camera_growth_annual": 0.10,
+    "user_growth_annual": 0.15,
+    "forecast_years": 3
+  },
+  "constraints": {
+    "must_use_local_deployment": true,
+    "data_residency": "境内",
+    "max_gpu_nodes": 20
+  },
+  "assumption_refs": ["A-01", "A-02", "A-08"]
+}

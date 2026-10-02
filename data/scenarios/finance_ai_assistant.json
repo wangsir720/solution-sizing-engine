@@ -1,0 +1,42 @@
+{
+  "scenario_id": "finance_ai_assistant",
+  "name": "城商行智能客服与研报辅助",
+  "industry": "金融",
+  "description": "银行侧的两个推理场景叠加：面向客户的智能客服（长文本对话 + 检索），以及面向投顾/客户经理的研报摘要与工单辅助。含 RAG 检索与向量检索，因此除 GPU 推理外还需要向量库与对象存储。",
+  "workload": {
+    "camera_count": 0,
+    "fps_per_camera": 0,
+    "stream_bitrate_mbps": 0.0,
+    "retention_days_hot": 30,
+    "retention_days_cold": 365,
+    "ai_inference_fps": 0,
+    "ai_concurrent_sessions": 1200,
+    "ai_tokens_per_session": 3500,
+    "ai_prefill_tokens_per_session": 900,
+    "ai_model": "70B 级通用模型 + 行业微调",
+    "ai_inference_gpu_type": "GNV4.11CU.1GPU",
+    "ai_inference_gpu_per_node": 1,
+    "concurrent_users": 1500,
+    "avg_bandwidth_mbps_per_user": 2.0,
+    "api_qps": 2400,
+    "api_p95_latency_ms": 300,
+    "knowledge_base_gb": 800,
+    "daily_new_knowledge_gb": 5
+  },
+  "service_level": {
+    "availability_target": 0.9995,
+    "rto_minutes": 15,
+    "rpo_minutes": 1
+  },
+  "growth": {
+    "camera_growth_annual": 0.0,
+    "user_growth_annual": 0.35,
+    "forecast_years": 3
+  },
+  "constraints": {
+    "must_use_local_deployment": true,
+    "data_residency": "境内",
+    "max_gpu_nodes": 30
+  },
+  "assumption_refs": ["A-03", "A-04", "A-06", "A-07"]
+}

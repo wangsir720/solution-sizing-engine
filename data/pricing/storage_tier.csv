@@ -1,0 +1,7 @@
+﻿tier,medium,monthly_cny_per_gib,source_url,fetched_at,note
+performance_hdd,高性能云硬盘,0.35,https://cloud.tencent.com/document/product/362/2413,2026-10-02,华南地区(广州) 包年包月
+general_ssd,通用型SSD云硬盘,0.50,https://cloud.tencent.com/document/product/362/2413,2026-10-02,华南地区(广州) 包年包月
+ssd,SSD云硬盘,1.00,https://cloud.tencent.com/document/product/362/2413,2026-10-02,华南地区(广州) 包年包月
+enhanced_ssd,增强型SSD云硬盘,1.00,https://cloud.tencent.com/document/product/362/2413,2026-10-02,华南地区(广州) 包年包月
+snapshot,快照容量,0.13,https://cloud.tencent.com/document/product/362/2413,2026-10-02,广州 折算月单价 元/GiB
+backup_point,数据备份点,0.10,https://cloud.tencent.com/document/product/362/2413,2026-10-02,广州 包年包月 元/GiB

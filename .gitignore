@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# 生成物：方案包由 `python -m src.cli --all` 重新生成即可，不需要纳入版本管理。
+# 但保留 output 下的产物作为「可复核结果」证据，若你希望仓库自带样例输出，
+# 取消下面两行的注释即可。
+# output/*/solution_package.md
+# output/*/*.csv
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db

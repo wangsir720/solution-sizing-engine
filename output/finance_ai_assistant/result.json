@@ -1,0 +1,534 @@
+{
+  "scenario": {
+    "scenario_id": "finance_ai_assistant",
+    "name": "城商行智能客服与研报辅助",
+    "industry": "金融",
+    "description": "银行侧的两个推理场景叠加：面向客户的智能客服（长文本对话 + 检索），以及面向投顾/客户经理的研报摘要与工单辅助。含 RAG 检索与向量检索，因此除 GPU 推理外还需要向量库与对象存储。",
+    "workload": {
+      "camera_count": 0,
+      "fps_per_camera": 0,
+      "stream_bitrate_mbps": 0.0,
+      "retention_days_hot": 30,
+      "retention_days_cold": 365,
+      "ai_inference_fps": 0,
+      "ai_concurrent_sessions": 1200,
+      "ai_tokens_per_session": 3500,
+      "ai_prefill_tokens_per_session": 900,
+      "ai_model": "70B 级通用模型 + 行业微调",
+      "ai_inference_gpu_type": "GNV4.11CU.1GPU",
+      "ai_inference_gpu_per_node": 1,
+      "concurrent_users": 1500,
+      "avg_bandwidth_mbps_per_user": 2.0,
+      "api_qps": 2400,
+      "api_p95_latency_ms": 300,
+      "knowledge_base_gb": 800,
+      "daily_new_knowledge_gb": 5
+    },
+    "service_level": {
+      "availability_target": 0.9995,
+      "rto_minutes": 15,
+      "rpo_minutes": 1
+    },
+    "growth": {
+      "camera_growth_annual": 0.0,
+      "user_growth_annual": 0.35,
+      "forecast_years": 3
+    },
+    "constraints": {
+      "must_use_local_deployment": true,
+      "data_residency": "境内",
+      "max_gpu_nodes": 30
+    },
+    "assumption_refs": [
+      "A-03",
+      "A-04",
+      "A-06",
+      "A-07"
+    ]
+  },
+  "sizing": {
+    "scenario_id": "finance_ai_assistant",
+    "scenario_name": "城商行智能客服与研报辅助",
+    "video": {
+      "hot_gib": 0.0,
+      "cold_gib": 0.0,
+      "streams": 0,
+      "trace": "场景无摄像机与直播流，媒体存储按 0 计入（仍参与总容量汇总）",
+      "assumption_refs": [
+        "A-01"
+      ]
+    },
+    "knowledge": {
+      "raw_gib": 800.0,
+      "vector_gib": 20345.05,
+      "trace": "原始语料 800 GB；按中文语料密度约 1.5 字节/token 折算 tokens=1066666666667，每条 300 token -> 条数 3555555556；单条向量 1536 维 ×4 Byte = 6144 Byte -> 向量总量 20345.05 GiB",
+      "assumption_refs": [
+        "A-04"
+      ]
+    },
+    "gpu": {
+      "gpu_cards": 67,
+      "allocated_cards": 67,
+      "gpu_nodes": 67,
+      "gpu_per_node": 1,
+      "demands": [
+        {
+          "purpose": "大模型会话推理",
+          "cards_raw": 66.667,
+          "derivation": "ai_concurrent_sessions(1200) ÷ 单卡可承载并发(18.0，按 A-03 的 18.0 按显存 24GB 折算) = 66.67 卡"
+        }
+      ],
+      "trace": "大模型会话推理: ai_concurrent_sessions(1200) ÷ 单卡可承载并发(18.0，按 A-03 的 18.0 按显存 24GB 折算) = 66.67 卡 ; 合计需求 66.67 卡 -> 向上取整到整机粒度 = 67 卡 ; 卡数 / 每节点 1 卡 = 67.00 -> 向上取整 = 67 节点",
+      "assumption_refs": [
+        "A-03",
+        "A-05",
+        "A-08"
+      ]
+    },
+    "cpu": {
+      "cpu_nodes": 16,
+      "vcpu_total": 128,
+      "mem_gib_total": 512,
+      "trace": "api_qps(2400) ÷ 单节点 150 QPS(占位待压测) ÷ 超分比 1.0 = 16.00 节点 -> 向上取整 16 节点（单节点 8 vCPU / 32 GB）",
+      "assumption_refs": [
+        "A-05",
+        "A-09"
+      ]
+    },
+    "network": {
+      "peak_mbps": 3000.0,
+      "users": 1500,
+      "per_user_mbps": 2.0,
+      "trace": "并发用户(1500) × 人均带宽(2.00 Mbps) = 峰值 3000.00 Mbps",
+      "assumption_refs": [
+        "A-01"
+      ]
+    },
+    "gpu_nodes_with_ha": 1,
+    "cpu_nodes_with_ha": 1,
+    "redundancy": {
+      "mode": "N+1",
+      "trace": "可用性目标 0.9995 ≥ 0.9995 -> 各节点类型副本 +1"
+    },
+    "storage_total_gib": 21145.05,
+    "storage_total_gib_with_oversubscribe": 25374.06
+  },
+  "tco": {
+    "scenario_id": "finance_ai_assistant",
+    "years": 3,
+    "months": 36,
+    "lines": [
+      {
+        "category": "计算",
+        "item": "GPU 云服务器（GNV4.11CU.1GPU）",
+        "qty": 67,
+        "unit": "节点·月",
+        "unit_price": 5507.0,
+        "unit_price_source": "GNV4.11CU.1GPU（NVIDIA A10，12 vCPU / 48 GB，1 卡）月价 5507.0 元 —— https://cloud.tencent.com/document/product/236/50371",
+        "derivation": "需求 67 卡 / 每节点 1 卡 -> 67 节点；叠加 N+1 后按 67 节点计价",
+        "monthly_cny": 368969.0,
+        "total_cny": 13282884.0
+      },
+      {
+        "category": "存储",
+        "item": "知识库原始语料（通用型SSD云硬盘）",
+        "qty": 800.0,
+        "unit": "GiB·月",
+        "unit_price": 0.5,
+        "unit_price_source": "通用型SSD云硬盘 = 0.5 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）",
+        "derivation": "语料 800 GB",
+        "monthly_cny": 400.0,
+        "total_cny": 14400.0
+      },
+      {
+        "category": "存储",
+        "item": "向量索引（通用型SSD云硬盘）",
+        "qty": 20345.05,
+        "unit": "GiB·月",
+        "unit_price": 0.5,
+        "unit_price_source": "通用型SSD云硬盘 = 0.5 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）",
+        "derivation": "原始语料 800 GB；按中文语料密度约 1.5 字节/token 折算 tokens=1066666666667，每条 300 token -> 条数 3555555556；单条向量 1536 维 ×4 Byte = 6144 Byte -> 向量总量 20345.05 GiB",
+        "monthly_cny": 10172.52,
+        "total_cny": 366210.9
+      },
+      {
+        "category": "存储",
+        "item": "快照容量（快照容量）",
+        "qty": 2114.51,
+        "unit": "GiB·月",
+        "unit_price": 0.13,
+        "unit_price_source": "快照容量 = 0.13 元/GiB/月（来源 https://cloud.tencent.com/document/product/362/2413，抓取 2026-10-02）",
+        "derivation": "存储总量 21145.05 GiB × 快照比例 10%（假设 A-10）= 2114.51 GiB",
+        "monthly_cny": 274.89,
+        "total_cny": 9895.88
+      },
+      {
+        "category": "网络",
+        "item": "公网出向带宽（包月阶梯）",
+        "qty": 3000.0,
+        "unit": "Mbps",
+        "unit_price": 89.8883,
+        "unit_price_source": "public_bandwidth_le_2mbps = 20.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth） + public_bandwidth_2_5mbps = 25.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth） + public_bandwidth_gt_5mbps = 90.0 元/Mbps/月（来源 https://buy.cloud.tencent.com/price/bandwidth）",
+        "derivation": "阶梯累加：0-2 Mbps × 20.0 = 40.00 元/月 + 2-5 Mbps × 25.0 = 75.00 元/月 + 5-3000 Mbps × 90.0 = 269550.00 元/月 -> 269665.00 元/月",
+        "monthly_cny": 269665.0,
+        "total_cny": 9707940.0
+      }
+    ],
+    "monthly_total_cny": 649481.41,
+    "total_cny": 23381330.76,
+    "unpriced_items": [
+      {
+        "item": "通用计算节点（16 节点）",
+        "reason": "云厂商官方文档只提供在线价格计算器，未给出可回溯的公开单价表；本工具不猜测单价",
+        "action": "按实际规格与当日官方报价，在 compute_tco() 的「计算」科目下补一行，并把单价与来源 URL 一并写入 data/pricing/"
+      },
+      {
+        "item": "实施与迁移人力",
+        "reason": "属项目交付成本，非云资源标价",
+        "action": "按项目单独核算，不并入云资源 TCO"
+      },
+      {
+        "item": "税费与商务折扣",
+        "reason": "本工具取公开标价，不含税费与任何商务折扣",
+        "action": "以采购当日官方报价与合同为准"
+      }
+    ],
+    "pricing_note": "全部单价取自公开标价页，含来源 URL 与抓取日期；不含税、不含商务折扣、不含实施人力。"
+  },
+  "migration": {
+    "scenario_id": "finance_ai_assistant",
+    "waves": [
+      {
+        "wave": 1,
+        "name": "基础设施与网络就绪",
+        "target": "VPC / 子网 / 专线 / 安全组 / 负载均衡",
+        "risk": "低",
+        "cutover_window": "工作时间，无需割接窗口",
+        "dual_write": "不涉及（无业务数据）",
+        "gray": "不涉及",
+        "impact": {
+          "scope": "无在运业务受影响",
+          "downtime": "无中断",
+          "note": "基础设施就绪是前置条件"
+        },
+        "rollback": "回退触发：验证指标不达标（如吞吐或时延超出目标）立即回退；回退动作：把流量/挂载切回原资源；因未切写流量，无需数据回滚；预计回退耗时 ≤ 1 小时",
+        "checklist": [
+          "确认回退方案已验证（在预发环境完整演练过至少 1 次）",
+          "确认监控告警已接入，且告警接收人已确认在岗",
+          "确认割接窗口已与业务方书面确认（涉及停机的必须提前通知）",
+          "确认数据备份已完成且可恢复（迁移前做一次全量快照）",
+          "确认 VPC 与现有 IDC 路由可达，MTU 已核对",
+          "确认安全组策略最小化放通"
+        ],
+        "duration_hours": 24.0
+      },
+      {
+        "wave": 2,
+        "name": "存储与分布式存储迁移",
+        "target": "块存储 / 对象存储 / 文件存储",
+        "risk": "低",
+        "cutover_window": "工作时间",
+        "dual_write": "新写入双落到新旧两套存储，保留 7 天",
+        "gray": "按桶/按目录灰度，先迁冷数据与归档数据",
+        "impact": {
+          "scope": "历史数据与归档数据（不影响在线读写）",
+          "downtime": "无中断",
+          "note": "先迁冷数据，避免与在线业务争抢带宽"
+        },
+        "rollback": "回退触发：验证指标不达标（如吞吐或时延超出目标）立即回退；回退动作：把流量/挂载切回原资源；因未切写流量，无需数据回滚；预计回退耗时 ≤ 1 小时",
+        "checklist": [
+          "确认回退方案已验证（在预发环境完整演练过至少 1 次）",
+          "确认监控告警已接入，且告警接收人已确认在岗",
+          "确认割接窗口已与业务方书面确认（涉及停机的必须提前通知）",
+          "确认数据备份已完成且可恢复（迁移前做一次全量快照）",
+          "确认新旧存储数据一致性校验脚本已就绪",
+          "确认对象存储的跨区复制规则已关闭或已评估流量费用"
+        ],
+        "duration_hours": 40.0
+      },
+      {
+        "wave": 3,
+        "name": "数据库与中间件迁移",
+        "target": "关系型数据库 / 缓存 / 消息队列",
+        "risk": "高",
+        "cutover_window": "割接窗口（低峰期，需业务方确认）",
+        "dual_write": "应用层双写新旧库，持续 7 天；每日增量追平并做一致性校验",
+        "gray": "先只读流量切新库，双写期结束后再切写流量",
+        "impact": {
+          "scope": "依赖该数据库的全部在运业务（约 1500 并发用户的写链路）",
+          "downtime": "双写与只读灰度阶段无中断；切写窗口预计中断 ≤ 5 分钟",
+          "note": "切写前必须完成 7 天双写与一致性校验"
+        },
+        "rollback": "回退触发：数据一致性校验失败、核心事务失败率 > 0.1%，或业务方主动叫停；回退动作：应用层停止写新库，切换回老库连接串；双写期内老库始终为权威数据源，无数据丢失；需回滚新库已写入的增量（依据双写日志做反向补偿，耗时按增量量级估算）；预计回退耗时 ≤ 4 小时，且**必须在双写窗口内完成**，超窗后回退成本显著上升",
+        "checklist": [
+          "确认回退方案已验证（在预发环境完整演练过至少 1 次）",
+          "确认监控告警已接入，且告警接收人已确认在岗",
+          "确认割接窗口已与业务方书面确认（涉及停机的必须提前通知）",
+          "确认数据备份已完成且可恢复（迁移前做一次全量快照）",
+          "确认双写开关可一键关闭（开关本身要有回滚预案）",
+          "确认一致性校验连续 72 小时无差异",
+          "确认慢查询与锁等待指标在双写期未劣化"
+        ],
+        "duration_hours": 56.0
+      },
+      {
+        "wave": 4,
+        "name": "应用与依赖服务迁移",
+        "target": "微服务 / 定时任务 / 批处理",
+        "risk": "中",
+        "cutover_window": "割接窗口",
+        "dual_write": "依赖第 3 波的数据双写，本波不再新增双写对象",
+        "gray": "按服务实例分批摘流，逐批放量",
+        "impact": {
+          "scope": "分批摘流的单个服务实例（按 1% -> 10% -> 50% -> 100% 灰度）",
+          "downtime": "单批摘流期间该实例请求由其余实例承接，不中断",
+          "note": "需确认剩余实例有余量承接摘流流量"
+        },
+        "rollback": "回退触发：黄金观察期内错误率超过基线 1.5 倍，或关键接口成功率低于 99.9%；回退动作：DNS/流量调度切回老入口 50% -> 10% -> 1%；新写入已通过双写或变更捕获保留在老系统，无需反向数据同步；预计回退耗时 ≤ 4 小时",
+        "checklist": [
+          "确认回退方案已验证（在预发环境完整演练过至少 1 次）",
+          "确认监控告警已接入，且告警接收人已确认在岗",
+          "确认割接窗口已与业务方书面确认（涉及停机的必须提前通知）",
+          "确认数据备份已完成且可恢复（迁移前做一次全量快照）",
+          "确认所有定时任务/批处理已在新环境完成一轮完整跑通",
+          "确认服务注册发现已切到新注册中心"
+        ],
+        "duration_hours": 48.0
+      },
+      {
+        "wave": 5,
+        "name": "业务流量切换与老系统下线",
+        "target": "公网入口 / 专线入口 / 流量调度 / 老机房设备",
+        "risk": "中",
+        "cutover_window": "割接窗口 + 黄金观察期 4 小时",
+        "dual_write": "不涉及（流量层不承载数据写入）",
+        "gray": "1% -> 10% -> 50% -> 100%",
+        "impact": {
+          "scope": "全量用户（1500 并发）",
+          "downtime": "割接窗口内预计中断 ≤ 30 分钟（DNS/入口切换）",
+          "note": "本波影响面最大，必须安排业务方值班并预留回退窗口"
+        },
+        "rollback": "回退触发：黄金观察期内错误率超过基线 1.5 倍，或关键接口成功率低于 99.9%；回退动作：DNS/流量调度切回老入口 50% -> 10% -> 1%；新写入已通过双写或变更捕获保留在老系统，无需反向数据同步；预计回退耗时 ≤ 4 小时",
+        "checklist": [
+          "确认回退方案已验证（在预发环境完整演练过至少 1 次）",
+          "确认监控告警已接入，且告警接收人已确认在岗",
+          "确认割接窗口已与业务方书面确认（涉及停机的必须提前通知）",
+          "确认数据备份已完成且可恢复（迁移前做一次全量快照）",
+          "确认证书与域名切换方案已备案（提前 7 天）",
+          "确认老系统进入只读观察期而非立即停机",
+          "确认下线前完成一次完整的数据归档与核对"
+        ],
+        "duration_hours": 24.0
+      }
+    ],
+    "total_waves": 5,
+    "total_duration_hours": 192.0,
+    "critical_path": "波次 3（数据库）-> 波次 4（应用）-> 波次 5（流量）",
+    "key_constraint": "波次 3 的双写窗口（7 天）是全程最硬的时间约束：回退动作必须在双写窗口内完成，超窗后回退成本显著上升。",
+    "assumption_refs": [
+      "A-07"
+    ],
+    "scope_note": "本方案按数据层/应用层/流量层划分波次，不含应用代码依赖扫描；实际波次划分须以真实系统的依赖分析结果为准。"
+  },
+  "ops": {
+    "scenario_id": "finance_ai_assistant",
+    "metrics": [
+      {
+        "name": "服务可用性",
+        "definition": "统计周期内，服务端点返回非 5xx 且响应体完整的请求数 / 总请求数",
+        "target": "99.95%",
+        "measure": "按 1 分钟粒度打点，月度出报表，扣除运维窗口内的计划内变更",
+        "basis": "参照公有云 SLA 通用分档（多可用区 档）；等级保修为合规底线，见 GB/T 22239-2019",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "允许的年度非计划停机",
+        "definition": "由可用性目标反推的年度停机时间预算（运维须控制在其内）",
+        "target": "≤ 262.8 分钟/年",
+        "measure": "故障台账累加",
+        "basis": "计算式：(1 − 0.99950) × 365 × 24 × 60 = 262.8 分钟",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "接口 P95 时延",
+        "definition": "网关侧统计，5xx 计入、超时计入，剔除客户端网络抖动段",
+        "target": "≤ 300 ms",
+        "measure": "网关 access log 逐分钟聚合，月度出 P50/P95/P99",
+        "basis": "场景 JSON 显式给定（workload.api_p95_latency_ms），属项目目标值而非行业强制标准",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "RTO（恢复时间目标）",
+        "definition": "从故障发生到业务恢复可用的时长",
+        "target": "≤ 15 分钟",
+        "measure": "故障台账逐次记录实际恢复时间，季度复盘",
+        "basis": "场景 JSON 给定；RTO 与可用性预算必须自洽 —— 单次故障恢复耗时超过 RTO 时须核减年度停机预算余量",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "RPO（恢复点目标）",
+        "definition": "从故障发生到可接受数据丢失窗口的时长",
+        "target": "≤ 1 分钟",
+        "measure": "核对最近一次备份/日志重放的实际可恢复时间点",
+        "basis": "RPO 直接决定存储快照频率与日志保留策略：RPO=1 分钟 -> 快照间隔须短于该值，或启用增量日志持续归档",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "GPU 算力利用率",
+        "definition": "推理/转码任务占用 GPU 时间的比例，按实例 5 分钟粒度取平均",
+        "target": "稳态 ≥ 60%，峰值 ≤ 85%",
+        "measure": "GPU 监控面板，按 15 分钟窗口出周报",
+        "basis": "口径为本项目自定义；下限低于 60% 意味着卡数测算偏保守，上限超过 85% 意味着排队时延将击穿 P95 目标",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "节点资源利用率",
+        "definition": "CPU 节点 vCPU 使用率 / 内存使用率的稳态均值",
+        "target": "CPU 稳态 40%–65%，内存稳态 55%–75%",
+        "measure": "云监控 5 分钟粒度，按月统计 P50",
+        "basis": "口径为本项目自定义；CPU 超分比在 data/assumptions.md A-09 中固定为 1.0（不超分），故利用率上限不设更高",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "存储水位",
+        "definition": "已用容量 / 已分配容量",
+        "target": "≤ 70%（热层），≤ 85%（冷层）",
+        "measure": "存储监控按日采集，月度出水位报表",
+        "basis": "口径为本项目自定义；70% 上限用于给扩容预留 72 小时的操作窗口",
+        "basis_is_public_standard": false
+      },
+      {
+        "name": "备份成功率与可恢复性",
+        "definition": "计划备份任务成功率；且必须定期做**恢复演练**（不只验证备份存在）",
+        "target": "备份成功率 ≥ 99.9%；季度恢复演练 1 次，RPO 实测达标",
+        "measure": "备份任务台账 + 演练记录",
+        "basis": "口径参考 GB/T 22239-2019 第三级对数据备份恢复的要求，但具体百分比为项目自定义",
+        "basis_is_public_standard": false
+      }
+    ],
+    "capacity_context": {
+      "gpu_nodes": 67,
+      "cpu_nodes": 16,
+      "total_nodes": 83,
+      "redundancy": "N+1"
+    },
+    "latency_rule": "P95 时延目标 × 可用性目标共同决定容量水位：在 99.95% 目标下，平均故障恢复时间（MTTR）内损失的可用时间占比不能挤占时延预算，否则扩容无法同时满足可用性与时延两个指标。",
+    "compliance_reference": {
+      "name": "GB/T 22239-2019 信息安全技术 网络安全等级保护基本要求",
+      "scope": "第三级安全保护对象",
+      "url": "https://openstd.samr.gov.cn/",
+      "note": "等级保护对信息系统提出可用性、完整性的定级要求；本表用它作为**合规底线口径**，不把自定 SLA 冒充国标指标"
+    },
+    "scope_note": "本表除等级保护合规底线外，其余指标口径均为本项目自定义，已在 basis 字段逐条标注是否引用公开标准。"
+  },
+  "value": {
+    "scenario_id": "finance_ai_assistant",
+    "scale_context": {
+      "concurrent_users": 1500,
+      "camera_count": 0,
+      "three_year_cloud_tco_cny": 23381330.76,
+      "months": 36
+    },
+    "quantified": [
+      {
+        "item": "自建机房对比云资源的三年支出差",
+        "formula": "三年云资源 TCO − 自建三年总拥有成本（服务器 + 存储 + 网络 + 机房 + 运维分摊）",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "自建侧成本无公开可比价目，且机房与运维分摊口径因客户而异",
+        "what_needed": "客户侧提供：现有机房机柜数与单价、服务器折旧政策、运维人力编制与成本",
+        "note": "本工具只给云资源侧 TCO 23381330.76 元（三年，不含税与折扣），不替客户估自建成本"
+      },
+      {
+        "item": "方案测算环节人工节省",
+        "formula": "（人工测算工时 − 工具测算工时） × 频次 × 三年",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "工时与频次是客户侧数据",
+        "what_needed": "客户侧提供：一份方案的人工测算工时、每月方案数量、以及实际使用本工具后的工时（建议现场计时 3 个真实场景取均值）",
+        "note": "把工时记录下来才算数：现场计时 3 个真实场景取均值，比引用任何行业平均值都有说服力"
+      },
+      {
+        "item": "迁移回退风险的成本敞口",
+        "formula": "预计回退次数 × 每次回退人工时 × 人工时成本 + 回退导致的业务中断损失",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "回退概率与业务中断损失需按客户实际业务等级评估",
+        "what_needed": "客户侧提供：人工时成本、业务中断的小时损失口径",
+        "note": "本工具的价值不在于算出这个数，而在于把回退触发条件、回退动作、回退耗时明确写进方案（见 output 的迁移章节），让风险可被管理"
+      },
+      {
+        "item": "三年容量增长轨迹下的逐年预算（容量摊销口径）",
+        "formula": "第 N 年月费 = Σ 各成本科目首年月费 × 该科目对应的增长因子；存储科目按摄像机增长率、计算科目按 max(摄像机, 用户) 增长率、网络科目按用户增长率",
+        "value_cny": 32366911.14,
+        "status": "已计算",
+        "reason": null,
+        "what_needed": null,
+        "note": "对照首年 ×3 的静态口径 23381330.76 元，增长口径为 32366911.14 元，差额 8985580.38 元即「按首年做三年预算」的低估额。本项为**已计算**而非待补，因为全部输入（价目表 + 场景增长率）均在手。",
+        "static_three_year_cny": 23381330.76,
+        "yearly": [
+          {
+            "year": 1,
+            "camera_factor": 1.0,
+            "user_factor": 1.0,
+            "projected_storage_gib": 21145.05,
+            "projected_gpu_nodes": 67,
+            "projected_cpu_nodes": 16,
+            "projected_monthly_cny": 649481.41,
+            "projected_year_cny": 7793776.92
+          },
+          {
+            "year": 2,
+            "camera_factor": 1.0,
+            "user_factor": 1.35,
+            "projected_storage_gib": 21145.05,
+            "projected_gpu_nodes": 90,
+            "projected_cpu_nodes": 22,
+            "projected_monthly_cny": 873003.31,
+            "projected_year_cny": 10476039.72
+          },
+          {
+            "year": 3,
+            "camera_factor": 1.0,
+            "user_factor": 1.8225,
+            "projected_storage_gib": 21145.05,
+            "projected_gpu_nodes": 122,
+            "projected_cpu_nodes": 29,
+            "projected_monthly_cny": 1174757.88,
+            "projected_year_cny": 14097094.5
+          }
+        ]
+      }
+    ],
+    "pending_items": [
+      {
+        "item": "自建机房对比云资源的三年支出差",
+        "formula": "三年云资源 TCO − 自建三年总拥有成本（服务器 + 存储 + 网络 + 机房 + 运维分摊）",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "自建侧成本无公开可比价目，且机房与运维分摊口径因客户而异",
+        "what_needed": "客户侧提供：现有机房机柜数与单价、服务器折旧政策、运维人力编制与成本",
+        "note": "本工具只给云资源侧 TCO 23381330.76 元（三年，不含税与折扣），不替客户估自建成本"
+      },
+      {
+        "item": "方案测算环节人工节省",
+        "formula": "（人工测算工时 − 工具测算工时） × 频次 × 三年",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "工时与频次是客户侧数据",
+        "what_needed": "客户侧提供：一份方案的人工测算工时、每月方案数量、以及实际使用本工具后的工时（建议现场计时 3 个真实场景取均值）",
+        "note": "把工时记录下来才算数：现场计时 3 个真实场景取均值，比引用任何行业平均值都有说服力"
+      },
+      {
+        "item": "迁移回退风险的成本敞口",
+        "formula": "预计回退次数 × 每次回退人工时 × 人工时成本 + 回退导致的业务中断损失",
+        "value_cny": null,
+        "status": "待补",
+        "reason": "回退概率与业务中断损失需按客户实际业务等级评估",
+        "what_needed": "客户侧提供：人工时成本、业务中断的小时损失口径",
+        "note": "本工具的价值不在于算出这个数，而在于把回退触发条件、回退动作、回退耗时明确写进方案（见 output 的迁移章节），让风险可被管理"
+      }
+    ],
+    "discipline_note": "本表不给出「效率提升 X%」「成本降低 Y%」这类无口径结论。所有收益项要么给出可复算的公式并标明所需输入，要么标记为待补 —— 价值可以算，口径不能编。"
+  }
+}

@@ -1,0 +1,14 @@
+﻿sku,gpu_model,gpu_memory_gib,vcpu_cores,mem_gib,monthly_cny,source_url,fetched_at,note
+GN7.8CU.1GPU,NVIDIA T4,16,8,32,3125,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN7 T4-16G 8CU/1GPU 广州 包年包月
+GN7.20CU.1GPU,NVIDIA T4,16,20,80,5000,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN7 T4-16G 20CU/1GPU 广州 包年包月
+GN7.32CU.1GPU,NVIDIA T4,16,32,128,6875,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN7 T4-16G 32CU/1GPU 广州 包年包月
+GN7.40CU.2GPU,NVIDIA T4,16,40,160,10000,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN7 T4-16G 40CU/2GPU 广州 包年包月
+GN7.80CU.4GPU,NVIDIA T4,16,80,320,20000,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN7 T4-16G 80CU/4GPU 广州 包年包月
+GNV4.11CU.1GPU,NVIDIA A10,24,12,48,5507,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GNV4 A10-24G 11CU/1GPU 广州 包年包月
+GNV4.22CU.2GPU,NVIDIA A10,24,24,96,10738,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GNV4 A10-24G 22CU/2GPU 广州 包年包月
+GNV4.44CU.4GPU,NVIDIA A10,24,48,192,21200,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GNV4 A10-24G 44CU/4GPU 广州 包年包月
+GNV4.88CU.8GPU,NVIDIA A10,24,96,384,42125,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GNV4 A10-24G 88CU/8GPU 广州 包年包月
+GN10XP.10CU.1GPU,NVIDIA V100,32,10,40,7188,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN10Xp V100-32G 10CU/1GPU 广州 包年包月
+GN10XP.20CU.2GPU,NVIDIA V100,32,20,80,14375,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN10Xp V100-32G 20CU/2GPU 广州 包年包月
+GN10XP.40CU.4GPU,NVIDIA V100,32,40,160,28750,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN10Xp V100-32G 40CU/4GPU 广州 包年包月
+GN10XP.80CU.8GPU,NVIDIA V100,32,80,320,57500,https://cloud.tencent.com/document/product/236/50371,2026-10-02,GN10Xp V100-32G 80CU/8GPU 广州 包年包月

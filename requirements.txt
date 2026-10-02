@@ -1,0 +1,11 @@
+# 运行时依赖：无第三方依赖。
+#
+# 本项目只用 Python 标准库（csv / json / math / argparse / os / dataclasses）。
+# 选零依赖是有意的：方案测算工具最怕的就是「装不上 / 版本冲突 / 三个月后跑不起来」，
+# 让拿到仓库的人 clone 完就能直接跑，比引一个重量级数据处理库更值。
+#
+# 唯一需要的开发期工具是 pytest（跑测试）：
+#     pip install pytest
+#
+# 验证过的运行环境：
+#     Python 3.12.8 / Windows
